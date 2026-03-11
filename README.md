@@ -1,93 +1,258 @@
-# Laravel Eloquent
+# zairakai/laravel-eloquent
 
+[![Main][pipeline-main-badge]][pipeline-main-link]
+[![Develop][pipeline-develop-badge]][pipeline-develop-link]
+[![Coverage][coverage-badge]][coverage-link]
 
+[![GitLab Release][gitlab-release-badge]][gitlab-release]
+[![Packagist][packagist-badge]][packagist]
+[![Downloads][downloads-badge]][packagist]
+[![License][license-badge]][license]
 
-## Getting started
+[![PHP][php-badge]][php]
+[![Laravel][laravel-badge]][laravel]
+[![Static Analysis][phpstan-badge]][phpstan]
+[![Code Style][pint-badge]][pint]
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Eloquent base classes and helpers for safer column mapping, automatic table detection, and clean JSON serialization.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+## Features
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+- **Column mapping** — map logical names to physical database column names via a `COLUMNS` constant
+- **Automatic table detection** — derives table name from class name and namespace, no configuration needed
+- **Primary key detection** — resolves from `PRIMARY_KEY` constant or `COLUMNS['id']`, defaults to `'id'`
+- **Deprecated column tracking** — redirect renamed columns via `COLUMNS_DELETED` with automatic log warnings
+- **Safe JSON serialization** — `toJson()`, `jsonSerialize()`, and `toReadableArray()` use logical column names
+- **Transparent Eloquent API** — `fill()`, `getAttribute()`, `setAttribute()`, `isFillable()` resolve column names automatically
+- **`BaseModel`** — ready-to-extend abstract model with all features pre-configured
+- **`BasePivot`** — ready-to-extend abstract pivot class, non-incrementing by default
+- **`BaseTable` trait** — use all features in any existing model without changing its base class
+- **Configurable logging** — channel, level, backtrace depth, and per-model exclusions via `config/laravel-eloquent.php`
+- **`eloquent:convert` command** — detect and convert existing `Model`/`Pivot` classes to `BaseModel`/`BasePivot`
+- **Published stubs** — `model.stub`, `model.pivot.stub`, `model.plain.stub` for `make:model`
 
+---
+
+## Install
+
+```bash
+composer require zairakai/laravel-eloquent
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/zairakai/php-packages/laravel-eloquent.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
-
-* [Set up project integrations](https://gitlab.com/zairakai/php-packages/laravel-eloquent/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Extend BaseModel
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```php
+use Zairakai\LaravelEloquent\Models\BaseModel;
+
+class User extends BaseModel
+{
+    public const COLUMNS = [
+        'id'    => 'user_id',
+        'email' => 'user_email',
+        'name'  => 'full_name',
+    ];
+}
+
+// Eloquent methods use logical names transparently
+User::where('email', 'alice@example.com')->first();
+$user->fill(['name' => 'Alice']);
+$user->getAttribute('email');
+
+// Serialization uses logical names
+$user->toReadableArray(); // ['id' => 1, 'email' => 'alice@example.com', 'name' => 'Alice']
+$user->toJson();          // {"id":1,"email":"alice@example.com","name":"Alice"}
+```
+
+### Extend BasePivot
+
+```php
+use Zairakai\LaravelEloquent\Models\BasePivot;
+
+class RoleUser extends BasePivot
+{
+    public const TABLE_NAME = 'role_user';
+
+    public const COLUMNS = [
+        'role_id' => 'fk_role',
+        'user_id' => 'fk_user',
+    ];
+}
+```
+
+`BasePivot` is non-incrementing by default (`$incrementing = false`).
+
+### Use the trait on an existing model
+
+```php
+use Illuminate\Database\Eloquent\Model;
+use Zairakai\LaravelEloquent\Traits\BaseTable;
+
+class Post extends Model
+{
+    use BaseTable;
+
+    public const COLUMNS = [
+        'id'    => 'post_id',
+        'title' => 'post_title',
+    ];
+}
+```
+
+### Table name resolution
+
+The table name is derived automatically. You can override it with `TABLE_NAME`:
+
+```php
+// App\Models\User → users
+// App\Models\BlogPost → blog_posts
+// App\Models\Shop\Product → shop_products  (namespace prefix)
+
+class Invoice extends BaseModel
+{
+    public const TABLE_NAME = 'billing_invoices'; // explicit override
+}
+```
+
+### Primary key resolution
+
+Resolution order: `PRIMARY_KEY` constant → `COLUMNS['id']` value → `'id'` fallback.
+
+```php
+class Order extends BaseModel
+{
+    public const PRIMARY_KEY = 'order_uuid';
+}
+
+class Product extends BaseModel
+{
+    public const COLUMNS = [
+        'id' => 'product_id', // resolved as primary key
+    ];
+}
+```
+
+### Deprecated column tracking
+
+Rename a column in `COLUMNS` and keep the old key in `COLUMNS_DELETED` to redirect legacy code
+with a log warning instead of silently breaking:
+
+```php
+class User extends BaseModel
+{
+    public const COLUMNS = [
+        'id'       => 'user_id',
+        'username' => 'login_name', // renamed column
+    ];
+
+    public const COLUMNS_DELETED = [
+        'login' => 'username', // 'login' → redirects to 'username' + logs a warning
+    ];
+}
+
+$user->getAttribute('login'); // resolves to 'login_name', logs deprecation warning
+```
+
+### Publish configuration
+
+```bash
+php artisan vendor:publish --tag=laravel-eloquent-config
+```
+
+Key options in `config/laravel-eloquent.php`:
+
+| Key | Default | Description |
+| :--- | :--- | :--- |
+| `logging.enabled` | `true` | Enable/disable all column resolution logging. |
+| `logging.channel` | `null` | Log channel (uses default Laravel channel if null). |
+| `logging.levels.deprecated` | `'warning'` | Log level for deprecated column access. |
+| `logging.levels.missing` | `'info'` | Log level for columns not found in `COLUMNS`. |
+| `logging.include_backtrace` | `true` | Include call backtrace in log entries. |
+| `logging.backtrace_depth` | `5` | Number of stack frames in the backtrace. |
+| `logging.excluded_models` | `[]` | Model classes excluded from logging. |
+
+### Publish stubs
+
+```bash
+php artisan vendor:publish --tag=laravel-eloquent-stubs
+```
+
+Published stubs: `stubs/model.stub`, `stubs/model.pivot.stub`, `stubs/model.plain.stub`.
+
+### Convert existing models
+
+Detect and convert all `Model` / `Pivot` classes in your `app/Models` directory:
+
+```bash
+# Preview changes without modifying files
+php artisan eloquent:convert --dry-run
+
+# Convert with confirmation prompt
+php artisan eloquent:convert
+
+# Convert a custom path without confirmation
+php artisan eloquent:convert --path=app/Domain/Models --force
+```
+
+The command replaces `extends Model` with `extends BaseModel` and `extends Pivot` with
+`extends BasePivot`, updates imports, and removes any manual `use BaseTable` statements.
+
+---
+
+## Development
+
+```bash
+make quality        # pint + phpstan + rector + insights + markdownlint + shellcheck
+make quality-fast   # pint + phpstan + markdownlint
+make test           # phpunit / pest
+```
+
+---
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Contributions are welcome. Please read [CONTRIBUTING.md][contributing] for the project-specific workflow and quality standards.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+---
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Getting Help
 
-## License
-For open source projects, say how it is licensed.
+[![License][license-badge]][license]
+[![Security Policy][security-badge]][security]
+[![Issues][issues-badge]][issues]
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Made with ❤️ by [Zairakai][ecosystem]**
+
+<!-- Reference Links -->
+[pipeline-main-badge]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/badges/main/pipeline.svg?ignore_skipped=true&key_text=Main
+[pipeline-main-link]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/commits/main
+[pipeline-develop-badge]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/badges/develop/pipeline.svg?ignore_skipped=true&key_text=Develop
+[pipeline-develop-link]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/commits/develop
+[coverage-badge]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/badges/main/coverage.svg
+[coverage-link]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/-/commits/main
+[gitlab-release-badge]: https://img.shields.io/gitlab/v/release/zairakai/php-packages/laravel-eloquent?logo=gitlab
+[gitlab-release]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/-/releases
+[packagist-badge]: https://img.shields.io/packagist/v/zairakai/laravel-eloquent
+[packagist]: https://packagist.org/packages/zairakai/laravel-eloquent
+[downloads-badge]: https://img.shields.io/packagist/dt/zairakai/laravel-eloquent
+[license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[license]: ./LICENSE
+[security-badge]: https://img.shields.io/badge/security-scanned-green.svg
+[security]: ./SECURITY.md
+[issues-badge]: https://img.shields.io/gitlab/issues/open-raw/zairakai%2Fphp-packages%2Flaravel-eloquent?logo=gitlab&label=Issues
+[issues]: https://gitlab.com/zairakai/php-packages/laravel-eloquent/-/issues
+[php-badge]: https://img.shields.io/badge/php-8.3%20%7C%208.4-blue?logo=php
+[php]: https://www.php.net
+[laravel-badge]: https://img.shields.io/badge/Laravel-11%20%7C%2012-red?logo=laravel
+[laravel]: https://laravel.com
+[phpstan-badge]: https://img.shields.io/badge/static%20analysis-phpstan-5B2C6F.svg?logo=php
+[phpstan]: https://phpstan.org
+[pint-badge]: https://img.shields.io/badge/code%20style-pint-22C55E.svg
+[pint]: https://laravel.com/docs/pint
+[ecosystem]: https://gitlab.com/zairakai
+[contributing]: ./CONTRIBUTING.md

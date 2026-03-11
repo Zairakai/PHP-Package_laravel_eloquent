@@ -1,0 +1,23 @@
+# ================================
+# GITLAB CI/CD PIPELINE
+# ================================
+# Pipeline généré par zairakai/laravel-dev-tools.
+# Hérite du template complet — seules les variables propres à ce projet
+# sont définies ici.
+#
+# Pour mettre à jour le template après composer update :
+#   composer update zairakai/laravel-dev-tools
+#   (La ref: ci-dessous est mise à jour automatiquement)
+
+include:
+  - project: 'zairakai/php-packages/laravel-dev-tools'
+    ref: v1.0.0
+    file: '.gitlab/ci/pipeline-php-package.yml'
+
+variables:
+  # Identifiant unique du cache Composer pour ce projet
+  CACHE_KEY: "laravel-eloquent"
+
+  # Nom complet du package sur Packagist
+  # Utilisé dans la release GitLab pour le lien vers Packagist
+  PACKAGIST_PACKAGE: "zairakai/laravel-eloquent"
