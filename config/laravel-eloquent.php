@@ -123,4 +123,24 @@ return [
         */
         'excluded_models' => [],
     ],
+
+    /*
+    | -------------------------------------------------------------------------
+    | Request-scoped Query Cache
+    | -------------------------------------------------------------------------
+    |
+    | When enabled, identical SELECT queries are cached for the duration of the
+    | current request using the array cache store. Duplicate queries (e.g. eager
+    | loading the same relation multiple times) hit the cache instead of the DB.
+    |
+    | Works correctly in both PHP-FPM (fresh per request) and Laravel Octane
+    | (array store is flushed between requests automatically).
+    |
+    | Default: false — opt-in per project.
+    |
+    */
+
+    'request_cache' => [
+        'enabled' => env('ELOQUENT_REQUEST_CACHE', false),
+    ],
 ];
