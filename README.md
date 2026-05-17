@@ -21,6 +21,8 @@ Eloquent base classes and helpers for safer column mapping, automatic table dete
 ## Features
 
 - **Column mapping** — map logical names to physical database column names via a `COLUMNS` constant
+- **Relation mapping** — map logical names to Eloquent relationship methods via a `RELATIONS` constant
+- **Scope mapping** — map logical names to Eloquent scope methods via a `SCOPES` constant
 - **Automatic table detection** — derives table name from class name and namespace, no configuration needed
 - **Primary key detection** — resolves from `PRIMARY_KEY` constant or `COLUMNS['id']`, defaults to `'id'`
 - **Deprecated column tracking** — redirect renamed columns via `COLUMNS_DELETED` with automatic log warnings
@@ -52,10 +54,20 @@ use Zairakai\LaravelEloquent\Models\BaseModel;
 
 class User extends BaseModel
 {
-    public const COLUMNS = [
+    public const string ROUTE_PARAM = 'user';
+
+    public const array COLUMNS = [
         'id'    => 'user_id',
         'email' => 'user_email',
         'name'  => 'full_name',
+    ];
+
+    public const array RELATIONS = [
+        'roles' => 'roles',
+    ];
+
+    public const array SCOPES = [
+        'suspended' => 'scopeSuspended',
     ];
 }
 
@@ -64,9 +76,10 @@ User::where('email', 'alice@example.com')->first();
 $user->fill(['name' => 'Alice']);
 $user->getAttribute('email');
 
-// Serialization uses logical names
-$user->toReadableArray(); // ['id' => 1, 'email' => 'alice@example.com', 'name' => 'Alice']
-$user->toJson();          // {"id":1,"email":"alice@example.com","name":"Alice"}
+// Resolution helpers
+User::resolveColumn('email');    // 'user_email'
+User::resolveRelation('roles');  // 'roles'
+User::resolveScope('suspended'); // 'scopeSuspended'
 ```
 
 ### Extend BasePivot
