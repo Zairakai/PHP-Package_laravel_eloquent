@@ -8,6 +8,8 @@ use Zairakai\LaravelEloquent\Support\ColumnResolver;
 use Zairakai\LaravelEloquent\Support\LoggingService;
 use Zairakai\LaravelEloquent\Support\PrimaryKeyResolver;
 use Zairakai\LaravelEloquent\Support\ReadableArrayTransformer;
+use Zairakai\LaravelEloquent\Support\RelationResolver;
+use Zairakai\LaravelEloquent\Support\ScopeResolver;
 use Zairakai\LaravelEloquent\Support\TableNameResolver;
 
 trait BaseTable
@@ -25,6 +27,16 @@ trait BaseTable
     public static function resolveColumn(string $key): string
     {
         return ColumnResolver::resolve(static::class, $key);
+    }
+
+    public static function resolveRelation(string $key): string
+    {
+        return RelationResolver::resolve(static::class, $key);
+    }
+
+    public static function resolveScope(string $key): string
+    {
+        return ScopeResolver::resolve(static::class, $key);
     }
 
     /**
