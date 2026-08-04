@@ -9,11 +9,6 @@ use Zairakai\LaravelEloquent\EloquentServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     protected function getEnvironmentSetUp($app): void
     {
         // Set up the environment if needed
