@@ -6,6 +6,7 @@
 
 [![GitLab Release][gitlab-release-badge]][gitlab-release]
 [![Packagist][packagist-badge]][packagist]
+[![Docs][docs-badge]][docs]
 [![Downloads][downloads-badge]][packagist]
 [![License][license-badge]][license]
 
@@ -15,6 +16,8 @@
 [![Code Style][pint-badge]][pint]
 
 Eloquent base classes and helpers for safer column mapping, automatic table detection, and clean JSON serialization.
+
+**Documentation: [laravel-eloquent-daeeae.gitlab.io][docs]**
 
 ---
 
@@ -269,3 +272,5 @@ Contributions are welcome. Please read [CONTRIBUTING.md][contributing] for the p
 [pint]: https://laravel.com/docs/pint
 [ecosystem]: https://gitlab.com/zairakai
 [contributing]: ./CONTRIBUTING.md
+[docs]: https://laravel-eloquent-daeeae.gitlab.io
+[docs-badge]: https://img.shields.io/badge/docs-online-blue
