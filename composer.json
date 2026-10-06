@@ -53,7 +53,7 @@
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.0",
         "rector/rector": "^2.3",
-        "zairakai/laravel-dev-tools": "^2.0"
+        "zairakai/laravel-dev-tools": "^3.0"
     },
     "suggest": {
         "ergebnis/composer-normalize": "Automated composer.json normalization"
@@ -114,7 +114,6 @@
         "post-update-cmd": [
             "@setup-dev-tools"
         ],
-        "setup-dev-tools": "bash vendor/zairakai/laravel-dev-tools/scripts/setup-package.sh --silent",
         "analyse": "bash vendor/zairakai/laravel-dev-tools/scripts/phpstan.sh",
         "analyse:baseline": "GENERATE_BASELINE=true bash vendor/zairakai/laravel-dev-tools/scripts/phpstan.sh",
         "cs": "bash vendor/zairakai/laravel-dev-tools/scripts/cs-check.sh",
@@ -128,6 +127,7 @@
         "quality-fast": "bash vendor/zairakai/laravel-dev-tools/scripts/ci-quality.sh",
         "rector": "bash vendor/zairakai/laravel-dev-tools/scripts/rector-check.sh",
         "rector:fix": "bash vendor/zairakai/laravel-dev-tools/scripts/rector-fix.sh",
+        "setup-dev-tools": "bash vendor/zairakai/laravel-dev-tools/scripts/setup-package.sh --silent",
         "test": "bash vendor/zairakai/laravel-dev-tools/scripts/test.sh",
         "test:coverage": "COVERAGE=true bash vendor/zairakai/laravel-dev-tools/scripts/test.sh",
         "test:unit": "TESTSUITE=Unit bash vendor/zairakai/laravel-dev-tools/scripts/test.sh"
