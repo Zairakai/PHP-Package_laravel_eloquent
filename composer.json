@@ -40,12 +40,12 @@
         "php": "^8.4",
         "illuminate/database": "^12.0 || ^13.0",
         "illuminate/support": "^12.0 || ^13.0",
-        "laravel/framework": "^12.0 || ^13.35"
+        "laravel/framework": "^12.0 || ^13.36"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.54",
         "orchestra/testbench": "^10.0 || ^11.3",
-        "phpunit/phpunit": "^12.5.38",
+        "phpunit/phpunit": "^12.5.39",
         "zairakai/laravel-dev-tools": "^4.3.1"
     },
     "suggest": {
