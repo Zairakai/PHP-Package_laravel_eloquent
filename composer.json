@@ -40,13 +40,13 @@
         "php": "^8.4",
         "illuminate/database": "^12.0 || ^13.0",
         "illuminate/support": "^12.0 || ^13.0",
-        "laravel/framework": "^12.0 || ^13.38"
+        "laravel/framework": "^12.0 || ^13.39"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.54",
         "orchestra/testbench": "^10.0 || ^11.3",
-        "phpunit/phpunit": "^12.5.40",
-        "zairakai/laravel-dev-tools": "^4.9.0"
+        "phpunit/phpunit": "^12.5.42",
+        "zairakai/laravel-dev-tools": "^4.9.1"
     },
     "suggest": {
         "ergebnis/composer-normalize": "Automated composer.json normalization"
